@@ -237,8 +237,8 @@ void Run_Cmd(char* path) {
                 const int exit_code = WEXITSTATUS(ret);
                 printf(">>   Done: %s -> %d\n",path,exit_code);
                 
-                if(exit_code)
-                    exit(1);
+                //if(exit_code)
+                //    exit(1);
             } else if (WIFSIGNALED(ret)) {
                 printf(">>   Killed: signal %d\n",WTERMSIG(ret));
                 exit(1);
@@ -283,8 +283,8 @@ void Run_Cmd(char* path) {
                 const int exit_code = WEXITSTATUS(ret);
                 printf(">>   Done: %s -> %d\n",path,exit_code);
                 
-                if(exit_code)
-                    exit(1);
+                //if(exit_code)
+                //    exit(1);
             } else if (WIFSIGNALED(ret)) {
                 printf(">>   Killed: signal %d\n",WTERMSIG(ret));
                 exit(1);
