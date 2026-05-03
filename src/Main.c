@@ -12,6 +12,26 @@
 #define WALKER_PATH "F:/home/codeleaded/Hecke/C"
 #endif
 
+/*
+Windows:
+TerminalCtl.h
+Networking.h
+InputMouse.h
+Console_PB.h
+HttpServer.h
+Lib3D_Math.h
+RLCamera.h
+VM16_Devices.h
+AlxParser.h
+WindowEngineGL1.0.h
+
+Linux:
+
+
+Both:
+
+*/
+
 void Run_Cmd_Old(char* path) {
     char cwd[512];
     if (getcwd(cwd,sizeof(cwd)) != NULL) {
@@ -95,9 +115,9 @@ void Run_Cmd_Old(char* path) {
     //snprintf(
     //    cmd,
     //    sizeof(cmd),
-    //    "cd %s; git init; git add .; git commit -m \"init commit\";\
-    //    git remote add origin https://github.com/codeleaded/%s.git;\
-    //    git push --force --set-upstream origin master",
+    //    "cd %s; git init; git add .; git commit -m \"init commit\"";
+    //    "git remote add origin https://github.com/codeleaded/%s.git";
+    //    "git push --force --set-upstream origin master",
     //    path,basename(path)
     //    //gh repo create %s --public --source=. --remote=origin --push;
     //);
@@ -132,8 +152,8 @@ void Run_Cmd_Old(char* path) {
         perror("system failed");
     } else {
         if (WIFEXITED(ret)) {
-            int exit_code = WEXITSTATUS(ret);
-            //printf(">> done: %s -> %d\n",path,exit_code);
+            const int exit_code = WEXITSTATUS(ret);
+            printf(">> done: %s -> %d\n",path,exit_code);
         } else if (WIFSIGNALED(ret)) {
             //printf(">> killed: signal %d\n",WTERMSIG(ret));
             exit(1);
@@ -168,11 +188,17 @@ void Run_Cmd(char* path) {
         //"git remote set-url origin https://github.com/C-Reaper/%s.git;"
         //"git remote remove origin;"
         //"git remote add origin https://github.com/C-Reaper/%s.git;"
-        //"make -f Makefile.linux clean; make -f Makefile.linux all;"
+        //"make -f Makefile.linux clean;"
+        //"make -f Makefile.linux all;"
+        //"make -f Makefile.wine all;"
+        //"make -f Makefile.web all;"
         "git add .; git commit -m \"update\";"
         "git push --force --set-upstream origin master"
         ,path//,basename(path)
     );
+
+    // WARNINGS = -Werror
+    // CFLAGS = -O0 -mavx2 -std=gnu17 $(WARNINGS)
 
     if(CStr_CmpLike(bn,"Cmd_*",'*')){
         printf(">> Cmd: %s\n",bn);
@@ -208,8 +234,11 @@ void Run_Cmd(char* path) {
             perror("system failed");
         } else {
             if (WIFEXITED(ret)) {
-                int exit_code = WEXITSTATUS(ret);
+                const int exit_code = WEXITSTATUS(ret);
                 printf(">>   Done: %s -> %d\n",path,exit_code);
+                
+                if(exit_code)
+                    exit(1);
             } else if (WIFSIGNALED(ret)) {
                 printf(">>   Killed: signal %d\n",WTERMSIG(ret));
                 exit(1);
@@ -251,8 +280,11 @@ void Run_Cmd(char* path) {
             perror("system failed");
         } else {
             if (WIFEXITED(ret)) {
-                int exit_code = WEXITSTATUS(ret);
+                const int exit_code = WEXITSTATUS(ret);
                 printf(">>   Done: %s -> %d\n",path,exit_code);
+                
+                if(exit_code)
+                    exit(1);
             } else if (WIFSIGNALED(ret)) {
                 printf(">>   Killed: signal %d\n",WTERMSIG(ret));
                 exit(1);
