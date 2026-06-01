@@ -296,8 +296,72 @@ void Run_Cmd(char* path) {
         printf(">> None: %s\n",bn);
     }
 }
+void Run_Cmd_Build(char* path) {
+    char* bn = basename(path);
+    printf(">> In directory: %s (%s)\n",path,bn);
+            
+    CStr name = Files_Name(path);
+    CStr rpath = CStr_Format("%s/%s.yaml",path,name);
+    CStr relpath = CStr_Replace(rpath,"/home/codeleaded/Hecke/C/Gui_KnowledgeTree",".");
+
+    char data[1024];
+    memset(data,0,sizeof(data));
+    snprintf(data,sizeof(data),
+        "Path: %s\n"
+        "PosX: 0.0\n"
+        "PosY: 0.0\n"
+        "Folded: false\n"
+        "Title: %s\n"
+        "Text: \"...\"",
+        relpath,name
+    );
+
+    const size_t size = strlen(data);
+    //Files_WriteT(rpath,data,size);
+    CStr_Free(&relpath);
+    CStr_Free(&rpath);
+    CStr_Free(&name);
+
+
+    Vec_CStr childs = Files_GetChilds(path);
+
+    for(int i = 0;i<childs.size;i++){
+        CStr child = *(CStr*)Vector_Get(&childs,i);
+        CStr type = Files_Type(child);
+        
+        if(CStr_Cmp(type,"yaml")){
+            printf("> %s\n",child);
+            
+            CStr name = Files_Name(child);
+            CStr relpath = CStr_Replace(child,"/home/codeleaded/Hecke/C/Gui_KnowledgeTree",".");
+
+            char data[1024];
+            memset(data,0,sizeof(data));
+            snprintf(data,sizeof(data),
+                "Path: %s\n"
+                "PosX: 0.0\n"
+                "PosY: 0.0\n"
+                "Folded: false\n"
+                "Title: %s\n"
+                "Text: \"...\"",
+                relpath,name
+            );
+
+            const size_t size = strlen(data);
+            //Files_WriteT(child,data,size);
+
+            CStr_Free(&relpath);
+            CStr_Free(&name);
+        }
+
+        CStr_Free(&type);
+    }
+
+    Vec_CStr_Free(&childs);
+}
 
 int main(int argc, char* argv[]) {
     Files_Walk(WALKER_PATH,Run_Cmd);
+    //Files_WalkR("/home/codeleaded/Hecke/C/Gui_KnowledgeTree/data",Run_Cmd_Build);
     return 0;
 }
